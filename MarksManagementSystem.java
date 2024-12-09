@@ -1,18 +1,16 @@
 import java.util.Scanner;
 
 public class MarksManagementSystem {
-    public static final int totalStudents = 100;
-    public static String[] studentId = new String[totalStudents];
-    public static String[] studentName = new String[totalStudents];
-    public static int[] progMarks = new int[totalStudents];
-    public static int[] dbmsMarks = new int[totalStudents];
-    public static int studentCount = 0;
+    static final int maxStudentCount = 100;
+    static String[] studentId = new String[maxStudentCount];
+    static String[] studentName = new String[maxStudentCount];
+    static int[] progMarks = new int[maxStudentCount];
+    static int[] dbmsMarks = new int[maxStudentCount];
+    static int currentStudentCount = 0;
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
-
-        while (scanner != null) {
+        while (true) {
             System.out.println("");
             System.out.println("------------------------------------------------------");
             System.out.println("|         Welcome to Marks Management System         |");
@@ -30,54 +28,53 @@ public class MarksManagementSystem {
             System.out.println("[10] Best in Database Management System");
             System.out.println("[11] Exit");
             System.out.println("");
-            System.out.print("Enter an option to continue: ");
+            System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
-
-            if (choice == 1) {
-                addNewStudent(scanner);
-                break;
-            } else if (choice == 2) {
-                addNewStudentWithMarks(scanner);
-                break;
-            } else if (choice == 3) {
-                addMarks(scanner);
-                break;
-            } else if (choice == 4) {
-                updateStudentDetails(scanner);
-                break;
-            } else if (choice == 5) {
-                updateMarks(scanner);
-                break;
-            } else if (choice == 6) {
-                deleteStudent(scanner);
-                break;
-            } else if (choice == 7) {
-                printStudentDetails(scanner);
-                break;
-            } else if (choice == 8) {
-                printStudentRanks();
-                break;
-            } else if (choice == 9) {
-                bestInProgrammingFundamentals();
-                break;
-            } else if (choice == 10) {
-                bestInDBMS();
-                break;
-            } else if (choice == 11) {
-                System.out.println("Exiting...");
-                scanner.close();
-                return;
-            } else {
-                System.out.println("Invalid option. Try again.");
-                break;
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    addNewStudent(scanner);
+                    break;
+                case 2:
+                    addNewStudentWithMarks(scanner);
+                    break;
+                case 3:
+                    addMarks(scanner);
+                    break;
+                case 4:
+                    updateStudentDetails(scanner);
+                    break;
+                case 5:
+                    updateMarks(scanner);
+                    break;
+                case 6:
+                    deleteStudent(scanner);
+                    break;
+                case 7:
+                    printStudentDetails(scanner);
+                    break;
+                case 8:
+                    printStudentRanks();
+                    break;
+                case 9:
+                    bestInProgrammingFundamentals();
+                    break;
+                case 10:
+                    bestInDBMS();
+                    break;
+                case 11:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid option. Try again.");
+                    break;
             }
         }
     }
 
     static void addNewStudent(Scanner scanner) {
-
         while (true) {
             System.out.print("Enter Student ID: ");
             String id = scanner.nextLine();
@@ -87,26 +84,19 @@ public class MarksManagementSystem {
             }
             System.out.print("Enter Student Name: ");
             String name = scanner.nextLine();
-            studentId[studentCount] = id;
-            studentName[studentCount] = name;
-            progMarks[studentCount] = -1; // -1 indicates marks not added
-            dbmsMarks[studentCount] = -1;
-            studentCount++;
-
-            System.out.println("Student added successfully. Do you want to add a new student? (Y/n): ");
-
-            String choice = scanner.nextLine();
-            if (choice.equals("n")) {
-                main(null);
-            } else {
-                continue;
-            }
+            studentId[currentStudentCount] = id;
+            studentName[currentStudentCount] = name;
+            progMarks[currentStudentCount] = -1;
+            dbmsMarks[currentStudentCount] = -1;
+            currentStudentCount++;
+            System.out.println("Student added successfully.");
+            break;
         }
     }
 
     static void addNewStudentWithMarks(Scanner scanner) {
         addNewStudent(scanner);
-        addMarksForStudent(scanner, studentCount - 1);
+        addMarksForStudent(scanner, currentStudentCount - 1);
     }
 
     static void addMarks(Scanner scanner) {
@@ -184,13 +174,13 @@ public class MarksManagementSystem {
             System.out.println("Invalid Student ID. Try again.");
             return;
         }
-        for (int i = index; i < studentCount - 1; i++) {
+        for (int i = index; i < currentStudentCount - 1; i++) {
             studentId[i] = studentId[i + 1];
             studentName[i] = studentName[i + 1];
             progMarks[i] = progMarks[i + 1];
             dbmsMarks[i] = dbmsMarks[i + 1];
         }
-        studentCount--;
+        currentStudentCount--;
         System.out.println("Student deleted successfully.");
     }
 
@@ -217,25 +207,25 @@ public class MarksManagementSystem {
     }
 
     static void printStudentRanks() {
-        int[] totalMarks = new int[studentCount];
-        int[] ranks = new int[studentCount];
-        for (int i = 0; i < studentCount; i++) {
+        int[] totalMarks = new int[currentStudentCount];
+        int[] ranks = new int[currentStudentCount];
+        for (int i = 0; i < currentStudentCount; i++) {
             if (progMarks[i] != -1 && dbmsMarks[i] != -1) {
                 totalMarks[i] = progMarks[i] + dbmsMarks[i];
             } else {
                 totalMarks[i] = -1;
             }
         }
-        for (int i = 0; i < studentCount; i++) {
+        for (int i = 0; i < currentStudentCount; i++) {
             ranks[i] = 1;
-            for (int j = 0; j < studentCount; j++) {
+            for (int j = 0; j < currentStudentCount; j++) {
                 if (totalMarks[j] > totalMarks[i]) {
                     ranks[i]++;
                 }
             }
         }
         System.out.println("\n--- Student Ranks ---");
-        for (int i = 0; i < studentCount; i++) {
+        for (int i = 0; i < currentStudentCount; i++) {
             if (totalMarks[i] != -1) {
                 System.out.println("Rank " + ranks[i] + ": " + studentName[i] + " (Total: " + totalMarks[i] + ")");
             }
@@ -245,7 +235,7 @@ public class MarksManagementSystem {
     static void bestInProgrammingFundamentals() {
         int maxIndex = -1;
         int maxMarks = -1;
-        for (int i = 0; i < studentCount; i++) {
+        for (int i = 0; i < currentStudentCount; i++) {
             if (progMarks[i] > maxMarks) {
                 maxMarks = progMarks[i];
                 maxIndex = i;
@@ -261,7 +251,7 @@ public class MarksManagementSystem {
     static void bestInDBMS() {
         int maxIndex = -1;
         int maxMarks = -1;
-        for (int i = 0; i < studentCount; i++) {
+        for (int i = 0; i < currentStudentCount; i++) {
             if (dbmsMarks[i] > maxMarks) {
                 maxMarks = dbmsMarks[i];
                 maxIndex = i;
@@ -275,7 +265,7 @@ public class MarksManagementSystem {
     }
 
     static int findStudentIndexById(String id) {
-        for (int i = 0; i < studentCount; i++) {
+        for (int i = 0; i < currentStudentCount; i++) {
             if (studentId[i].equals(id)) {
                 return i;
             }
